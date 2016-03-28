@@ -3,176 +3,59 @@
 <head>
 	<title></title>
 	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="/asciinema-player.css">
 	<style type="text/css">
 		body {
-			font: 10pt/16pt monospace;
-			color: hsl(230, 8%, 24%);
+			font: 10pt/16pt Consolas, Menlo, 'Bitstream Vera Sans Mono', monospace, 'Powerline Symbols';
+			color: #c0c5ce;
 			background: #2b303b;
-			margin: 0;
+			position: fixed;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			justify-content: center;
 		}
-		pre {
-			font-family: "Menlo", monospace;
-			margin: 0;
+		body > div {
+			width: 87ch;
 		}
-		pre:after {
-			content: " ";
-			background: hsl(221, 87%, 60%);
+		body > div > div.container {
+			height: 38.6666666657em;
+		}
+		h1 {
+			font-size: 10pt;
+			margin: 0 0 16pt;
+			color: #8fa1b3;
+			display: inline-block;
+		}
+		.links {
+			display: inline-block;
+			float: right;
+			text-align: right;
+			margin: 0 0 16pt;
+		}
+		.links a {
+			color: #b48ead;
 		}
 		.control-bar {
 			display: none;
 		}
+		.asciinema-terminal {
+			border: none;
+		}
 	</style>
-	<link rel="stylesheet" type="text/css" href="/asciinema-player.css">
 </head>
 <body>
-	<div id="player-container"></div>
-	<!-- <pre id="tty"></pre> -->
-	<script type="text/text">
-		var input = [{
-			text: ["11:12:16 "],
-			style: "color: hsl(301, 63%, 40%)",
-			delay: 0
-		},{
-			text: ["~ "],
-			style: "color: hsl(198, 99%, 37%)",
-			delay: 0
-		},{
-			text: ["→ "],
-			style: "color: hsl(5, 74%, 59%)",
-			delay: 0
-		},{
-			text: "echo ",
-			style: "color: hsl(119, 34%, 47%)",
-			delay: 600
-		},{
-			text: "\"Hello world\\!\" ",
-			style: "color: hsl(41, 99%, 30%)"
-		},{
-			text: "| "
-		},{
-			text: "pbc\n",
-			style: "color: hsl(119, 34%, 47%)"
-		},{
-			text: ["11:12:25 "],
-			style: "color: hsl(301, 63%, 40%)",
-			delay: 0
-		},{
-			text: ["~ "],
-			style: "color: hsl(198, 99%, 37%)",
-			delay: 0
-		},{
-			text: ["→ "],
-			style: "color: hsl(5, 74%, 59%)",
-			delay: 0
-		},{
-			text: "ssh ",
-			style: "color: hsl(119, 34%, 47%)",
-			delay: 800
-		},{
-			text: "root@vm\n"
-		},{
-			text: ["Last login: Sun Mar 27 11:04:28 2016 from 192.168.64.1\n"],
-			delay: 600
-		},{
-			text: ["@vm "],
-			style: "color: hsl(198, 99%, 37%)",
-			delay: 200
-		},{
-			text: ["11:12:30 "],
-			style: "color: hsl(301, 63%, 40%)",
-			delay: 0
-		},{
-			text: ["~ "],
-			style: "color: hsl(198, 99%, 37%)",
-			delay: 0
-		},{
-			text: ["→ "],
-			style: "color: hsl(5, 74%, 59%)",
-			delay: 0
-		},{
-			text: "pbp\n",
-			style: "color: hsl(119, 34%, 47%)",
-			delay: 800
-		},{
-			text: ["Hello world!\n"],
-			delay: 200
-		},{
-			text: ["@vm "],
-			style: "color: hsl(198, 99%, 37%)",
-			delay: 0
-		},{
-			text: ["11:12:32 "],
-			style: "color: hsl(301, 63%, 40%)",
-			delay: 0
-		},{
-			text: ["~ "],
-			style: "color: hsl(198, 99%, 37%)",
-			delay: 0
-		},{
-			text: ["→ "],
-			style: "color: hsl(5, 74%, 59%)",
-			delay: 0
-		},{
-			text: [],
-			clear: true,
-			delay: 5000
-		},{
-			text: "hello world!"
-		}];
-
-		var target = document.getElementById("tty");
-		var delay = 80;
-
-		function nextStage(i) {
-			if (i >= input.length) {
-				setTimeout(function () {
-					while (target.lastChild) target.removeChild(target.lastChild);
-					nextStage(0);
-				}, 5000);
-				return;
-			}
-			var span = document.createElement("span");
-			target.appendChild(span);
-			var j = 0;
-			var stage = input[i];
-			var d = delay * (2.5 + Math.random());
-
-			if (typeof(stage) == "object") {
-				if (stage.clear) {
-					setTimeout(function () {
-						while (target.lastChild) target.removeChild(target.lastChild);
-						nextStage(++i);
-					}, stage.delay || 0);
-					return;
-				}
-				if (stage.style)
-					span.setAttribute("style", stage.style);
-				if (stage.delay != undefined)
-					d = stage.delay;
-
-				stage = stage.text;
-			}
-
-			if (d > 0)
-				setTimeout(nextPart.bind(this, stage, span, i, j), d);
-			else
-				nextPart(stage, span, i, j);
-		}
-
-		function nextPart(stage, span, i, j) {
-			if (j >= stage.length) return nextStage(++i);
-			var part = stage[j];
-			var d = (j == stage.length - 1) ? 0 : delay;
-			span.textContent += part;
-
-			if (d > 0)
-				setTimeout(nextPart.bind(this, stage, span, i, ++j), d * (0.5 + Math.random()));
-			else
-				nextPart(stage, span, i, ++j);
-		}
-
-		nextStage(0);
-	</script>
+	<div>
+		<h1>pbcp</h1>
+		<div class="links">
+			<a href="https://github.com/pbcp">GitHub</a>
+		</div>
+		<div id="player-container" class="container"></div>
+	</div>
 	<script type="text/javascript" src="/asciinema-player.js"></script>
 	<script type="text/javascript">
 		asciinema_player.core.CreatePlayer('player-container', '/asciicast-40571.json', {
@@ -181,7 +64,8 @@
 			autoPlay: true,
 			speed: 1.5,
 			theme: "ocean",
-			loop: true
+			loop: true,
+			fontSize: "10pt"
 		});
 	</script>
 </body>
