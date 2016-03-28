@@ -107,6 +107,12 @@ var input = [{
 	text: ["→ "],
 	style: "color: hsl(5, 74%, 59%)",
 	delay: 0
+},{
+	text: [],
+	clear: true,
+	delay: 5000
+},{
+	text: "hello world!"
 }];
 
 var target = document.getElementById("tty");
@@ -127,6 +133,13 @@ function nextStage(i) {
 	var d = delay * (2.5 + Math.random());
 
 	if (typeof(stage) == "object") {
+		if (stage.clear) {
+			setTimeout(function () {
+				while (target.lastChild) target.removeChild(target.lastChild);
+				nextStage(++i);
+			}, stage.delay || 0);
+			return;
+		}
 		if (stage.style)
 			span.setAttribute("style", stage.style);
 		if (stage.delay != undefined)
